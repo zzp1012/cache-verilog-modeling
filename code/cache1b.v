@@ -121,6 +121,16 @@ module cache1b(
             if (n != -1) begin
                 #1 cache_mem[n] = in_read_data;
                 tags[n]         = in_addr[9:5];
+                hit_or_miss     = 1;
+                if (in_row == 1'b0) begin
+                    out_read_data   = cache_mem[n][in_addr[3:0] * byte +: byte];
+                end
+                else if (in_row == 1'b1) begin
+                    cache_mem[n][in_addr[3:0] * byte +: byte] = in_write_data;
+                    out_write_data  = cache_mem[n];
+                    out_addr        = in_addr;
+                out_row         = 1;
+                end
             end
         end
 

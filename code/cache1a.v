@@ -93,6 +93,16 @@ module cache1a(
             out_row         = 0;
             #1 cache_mem[in_addr[5:4]] = in_read_data;
             tags[in_addr[5:4]]         = in_addr[9:5];
+            hit_or_miss     = 1;
+            if (in_row == 1'b0) begin
+                out_read_data   = cache_mem[in_addr[5:4]][in_addr[3:0] * byte +: byte];
+            end
+            else if (in_row == 1'b1) begin
+                cache_mem[in_addr[5:4]][in_addr[3:0] * byte +: byte] = in_write_data;
+                out_write_data  = cache_mem[in_addr[5:4]];
+                out_addr        = in_addr;
+                out_row         = 1;
+            end
         end
         valid[in_addr[5:4]] = 1;
     end
